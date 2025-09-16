@@ -117,7 +117,7 @@ Open the generated **`SonarCloud-Executive-Report.html`** in your browser.
 This repo includes a workflow that runs the script on a schedule and uploads the HTML as an artifact.  
 Set a secret named **`SONARCLOUD_TOKEN`** in your repository settings.
 
-See [`examples/workflows/generate-report.yml`](.github/workflows/generate-report.yml).
+See [`examples/workflows/generate-report.yml`](examples/workflows/generate-report.yml).
 
 ---
 
