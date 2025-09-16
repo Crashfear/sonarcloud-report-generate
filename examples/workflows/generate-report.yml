@@ -1,0 +1,41 @@
+name: Generate SonarCloud Executive Report
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "0 6 * * 1"
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup PowerShell 7
+        uses: PowerShell/PowerShell@v1
+        with:
+          pwsh-version: '7.4'
+
+      - name: Generate HTML report
+        shell: pwsh
+        env:
+          SONARCLOUD_TOKEN: ${{ secrets.SONARCLOUD_TOKEN }}
+        run: |
+          $ErrorActionPreference = "Stop"
+          $out = "SonarCloud-Executive-Report.html"
+          ./Export-SonarCloudSecurityReport.ps1 `
+            -ProjectKey "your_org_your_project" `
+            -Organization "your_org" `
+            -Token $env:SONARCLOUD_TOKEN `
+            -Branch "master" `
+            -OutFile $out
+          Write-Host "Report generated: $out"
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: sonarcloud-executive-report
+          path: SonarCloud-Executive-Report.html
+          if-no-files-found: error
